@@ -1,0 +1,4 @@
+__pycache__/
+output/results_partial.json
+data/*
+!data/.gitkeep

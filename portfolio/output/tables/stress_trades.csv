@@ -1,0 +1,49 @@
+Scenario,Portfolio,trade VT $,trade GOLD $,trade VGIT $,trade TBILL $,Turnover_$
+A Equity crash,VT100,0.0,0.0,0.0,0.0,0.0
+A Equity crash,A: VT90/G10,3960.0,-3960.0,0.0,0.0,3960.0
+A Equity crash,B: VT80/G10/VGIT10,6720.0,-3560.0,-3160.0,0.0,6720.0
+A Equity crash,C: VT80/G10/SGOV10,6336.0,-3608.0,0.0,-2728.0,6336.0
+A Equity crash,VT80/VGIT20,6400.0,0.0,-6400.0,0.0,6400.0
+A Equity crash,VT95/G5,2090.0,-2090.0,0.0,0.0,2090.0
+A Equity crash,VT85/G15,5610.0,-5609.999999999998,0.0,0.0,5609.999999999999
+A Equity crash,VT80/G20,7040.0,-7040.0,0.0,0.0,7040.0
+A Equity crash,VT75/G15/VGIT10,7950.0,-5009.999999999998,-2940.0,0.0,7949.999999999999
+A Equity crash,VT70/G15/VGIT15,8820.0,-4709.999999999998,-4110.000000000002,0.0,8820.0
+A Equity crash,VT80/G10/VGIT5/SGOV5,6528.0,-3584.0,-1592.0,-1352.0,6528.0
+A Equity crash,VT60/G30/VGIT10 (in-sample robust),10320.0,-8039.999999999996,-2280.0,0.0,10319.999999999998
+B Stagflation shock,VT100,0.0,0.0,0.0,0.0,0.0
+B Stagflation shock,A: VT90/G10,3240.0,-3240.0,0.0,0.0,3240.0
+B Stagflation shock,B: VT80/G10/VGIT10,3520.0,-3160.0,-360.0,0.0,3520.0
+B Stagflation shock,C: VT80/G10/SGOV10,4736.0,-3008.0,0.0,-1728.0,4736.0
+B Stagflation shock,VT80/VGIT20,1280.0,0.0,-1280.0,0.0,1280.0
+B Stagflation shock,VT95/G5,1710.0,-1710.0,0.0,0.0,1710.0
+B Stagflation shock,VT85/G15,4590.0,-4590.0,0.0,0.0,4590.0
+B Stagflation shock,VT80/G20,5760.0,-5760.0,0.0,0.0,5760.0
+B Stagflation shock,VT75/G15/VGIT10,4650.0,-4470.0,-180.0,0.0,4650.0
+B Stagflation shock,VT70/G15/VGIT15,4620.0,-4410.0,-210.0,0.0,4620.0
+B Stagflation shock,VT80/G10/VGIT5/SGOV5,4128.0,-3084.0,-142.0,-902.0,4128.0
+B Stagflation shock,VT60/G30/VGIT10 (in-sample robust),6960.0,-7320.0,360.0,0.0,7320.0
+C Gold bear,VT100,0.0,0.0,0.0,0.0,0.0
+C Gold bear,A: VT90/G10,-3240.0,3240.0,0.0,0.0,3240.0
+C Gold bear,B: VT80/G10/VGIT10,-3648.0,3144.0,504.0,0.0,3648.0
+C Gold bear,C: VT80/G10/SGOV10,-3584.0,3152.0,0.0,432.0,3584.0
+C Gold bear,VT80/VGIT20,-1536.0,0.0,1536.0,0.0,1536.0
+C Gold bear,VT95/G5,-1710.0,1710.0,0.0,0.0,1710.0
+C Gold bear,VT85/G15,-4590.0,4590.0,0.0,0.0,4590.0
+C Gold bear,VT80/G20,-5760.0,5760.0,0.0,0.0,5760.0
+C Gold bear,VT75/G15/VGIT10,-4770.0,4446.0,324.0,0.0,4770.0
+C Gold bear,VT70/G15/VGIT15,-4788.0,4374.0,414.0,0.0,4788.0
+C Gold bear,VT80/G10/VGIT5/SGOV5,-3616.0,3148.0,254.0,214.0,3616.0
+C Gold bear,VT60/G30/VGIT10 (in-sample robust),-7055.999999999993,7272.0,-216.0,0.0,7271.999999999996
+D Joint stock/bond selloff,VT100,0.0,0.0,0.0,0.0,0.0
+D Joint stock/bond selloff,A: VT90/G10,1440.0,-1440.0,0.0,0.0,1440.0
+D Joint stock/bond selloff,B: VT80/G10/VGIT10,2240.0,-1320.0,-920.0,0.0,2240.0
+D Joint stock/bond selloff,C: VT80/G10/SGOV10,3456.0,-1168.0,0.0,-2288.0,3456.0
+D Joint stock/bond selloff,VT80/VGIT20,1920.0,0.0,-1920.0,0.0,1920.0
+D Joint stock/bond selloff,VT95/G5,760.0,-760.0,0.0,0.0,760.0
+D Joint stock/bond selloff,VT85/G15,2040.0,-2040.0,0.0,0.0,2040.0
+D Joint stock/bond selloff,VT80/G20,2560.0,-2560.0,0.0,0.0,2560.0
+D Joint stock/bond selloff,VT75/G15/VGIT10,2700.0,-1860.0,-840.0,0.0,2700.0
+D Joint stock/bond selloff,VT70/G15/VGIT15,2940.0,-1770.0,-1170.0,0.0,2940.0
+D Joint stock/bond selloff,VT80/G10/VGIT5/SGOV5,2848.0,-1244.0,-422.0,-1182.0,2848.0
+D Joint stock/bond selloff,VT60/G30/VGIT10 (in-sample robust),3600.0,-3000.0,-600.0,0.0,3600.0

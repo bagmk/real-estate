@@ -1,0 +1,5 @@
+Panel: 1972-01-31 -> 2025-12-31 648 months
+  VT: US mkt (French) [1972-01..1990-06]; Developed mkt (French) [1990-07..2008-07]; VT ETF [2008-08..2025-12]
+  GOLD: Gold spot (monthly) [1972-01..2004-12]; GLD ETF (+0.30% ER adj) [2005-01..2018-07]; GLDM ETF [2018-08..2025-12]
+  VGIT: 5y CMT par-bond model [1972-01..2007-02]; IEI ETF (+0.12% ER adj) [2007-03..2009-12]; VGIT ETF [2010-01..2025-12]
+  TBILL: 1m T-bill (French RF) [1972-01..2007-06]; BIL ETF (+0.05% ER adj) [2007-07..2020-06]; SGOV ETF [2020-07..2025-12]
