@@ -1,0 +1,579 @@
+<title>Yuna's Clinic</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: split hero with a live IV-bag drip, then a treatment "menu" read like a pharmacy label, visit steps, booking, hours. */
+:root {
+  --bg: #f4f8f8;
+  --surface: #ffffff;
+  --ink: #0f2a30;
+  --muted: #4f6a6f;
+  --line: #d5e2e3;
+  --accent: #0b7a80;
+  --accent-ink: #ffffff;
+  --accent-soft: #dff0ef;
+  --vitamin: #f2d64b;
+  --vitamin-ink: #3d3200;
+  --ok: #1f7a4a;
+  --font-display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --font-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --radius: 14px;
+  --max: 1120px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b1a1d; --surface: #11262a; --ink: #e4f0f0; --muted: #9db5b8; --line: #23403f;
+    --accent: #3fc1c4; --accent-ink: #062226; --accent-soft: #143638;
+    --vitamin: #e8cc4a; --vitamin-ink: #2a2200; --ok: #5ccf8e; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0b1a1d; --surface: #11262a; --ink: #e4f0f0; --muted: #9db5b8; --line: #23403f;
+  --accent: #3fc1c4; --accent-ink: #062226; --accent-soft: #143638;
+  --vitamin: #e8cc4a; --vitamin-ink: #2a2200; --ok: #5ccf8e; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.6; }
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.1; text-wrap: balance; margin: 0; }
+p { margin: 0; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+
+.wrap { max-width: var(--max); margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+/* Header */
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: color-mix(in srgb, var(--bg) 90%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+header.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 12px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); font-family: var(--font-display); font-weight: 700; font-size: 20px; }
+.brand-mark { width: 30px; height: 30px; border-radius: 9px; background: var(--accent); display: grid; place-items: center; }
+.brand-mark svg { width: 16px; height: 16px; }
+nav.links { display: flex; gap: 22px; font-weight: 500; font-size: 15px; }
+nav.links a { color: var(--ink); text-decoration: none; }
+nav.links a:hover { color: var(--accent); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 999px; padding: 12px 20px; font: 600 15px/1 var(--font-body); cursor: pointer; text-decoration: none; }
+.btn-primary { background: var(--accent); color: var(--accent-ink); }
+.btn-primary:hover { filter: brightness(1.08); }
+.btn-ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+@media (max-width: 760px) { nav.links { display: none; } }
+
+/* Season band */
+.season { background: var(--vitamin); color: var(--vitamin-ink); font-size: 14px; }
+.season .wrap { display: flex; flex-wrap: wrap; gap: 6px 16px; padding-block: 9px; align-items: center; }
+.season b { font-family: var(--font-mono); font-weight: 500; }
+
+/* Hero */
+.hero .wrap { display: grid; grid-template-columns: 1.25fr 1fr; gap: 48px; align-items: center; padding-block: 64px 56px; }
+.hero h1 { font-size: clamp(40px, 6vw, 68px); font-weight: 700; letter-spacing: -0.02em; }
+.hero h1 em { font-style: normal; color: var(--accent); }
+.hero-copy { display: grid; gap: 22px; min-width: 0; }
+.hero-copy > p { font-size: 18px; color: var(--muted); max-width: 52ch; }
+.hero-cta { display: flex; flex-wrap: wrap; gap: 12px; }
+.hero-facts { display: flex; flex-wrap: wrap; gap: 10px 26px; font-size: 14px; color: var(--muted); }
+.hero-facts span::before { content: "✓"; color: var(--accent); font-weight: 700; margin-right: 6px; }
+.bag-stage { display: grid; place-items: center; }
+.bag-stage svg { width: min(100%, 320px); height: auto; }
+@media (max-width: 860px) {
+  .hero .wrap { grid-template-columns: 1fr; padding-block: 40px; gap: 28px; }
+  .bag-stage { order: -1; }
+  .bag-stage svg { width: min(60%, 220px); }
+}
+
+/* Sections */
+section.block { padding-block: 64px; border-top: 1px solid var(--line); }
+.sec-head { display: grid; gap: 10px; margin-bottom: 32px; max-width: 64ch; }
+.sec-head h2 { font-size: clamp(30px, 4vw, 42px); font-weight: 700; letter-spacing: -0.01em; }
+.sec-head p { color: var(--muted); }
+
+/* Flu shots */
+.flu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.flu { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; display: grid; grid-template-rows: auto auto 1fr auto; gap: 10px; min-width: 0; }
+.flu h3 { font-size: 21px; }
+.flu .who { font-family: var(--font-mono); font-size: 12.5px; color: var(--accent); }
+.flu p { color: var(--muted); font-size: 15px; }
+.flu .price { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px dashed var(--line); padding-top: 12px; font-size: 14px; color: var(--muted); }
+.flu .price strong { font-family: var(--font-display); font-size: 22px; color: var(--ink); font-variant-numeric: tabular-nums; }
+@media (max-width: 860px) { .flu-grid { grid-template-columns: 1fr; } }
+
+/* IV menu */
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.chip { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 8px 14px; font: 500 14px/1 var(--font-body); cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.iv-list { display: grid; gap: 0; border-top: 2px solid var(--ink); }
+.iv { display: grid; grid-template-columns: 1fr 260px 120px; gap: 20px; padding-block: 22px; border-bottom: 1px solid var(--line); align-items: start; }
+.iv-main { display: grid; gap: 6px; min-width: 0; }
+.iv-main h3 { font-size: 22px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.tag { font: 500 11px/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; padding: 5px 8px; border-radius: 6px; background: var(--accent-soft); color: var(--accent); }
+.tag.pop { background: var(--vitamin); color: var(--vitamin-ink); }
+.iv-main p { color: var(--muted); font-size: 15px; max-width: 58ch; }
+.label { font-family: var(--font-mono); font-size: 13px; display: grid; grid-template-columns: auto 1fr; gap: 3px 12px; color: var(--muted); min-width: 0; }
+.label dt { text-transform: uppercase; font-size: 11px; letter-spacing: .06em; padding-top: 2px; }
+.label dd { margin: 0; color: var(--ink); }
+.iv-price { text-align: right; display: grid; gap: 8px; justify-items: end; }
+.iv-price strong { font-family: var(--font-display); font-size: 26px; font-variant-numeric: tabular-nums; }
+.iv-price button { font-size: 13px; padding: 8px 14px; }
+@media (max-width: 860px) {
+  .iv { grid-template-columns: 1fr; gap: 12px; }
+  .iv-price { text-align: left; justify-items: start; grid-auto-flow: column; align-items: center; justify-content: space-between; }
+}
+.addons { margin-top: 22px; font-size: 14.5px; color: var(--muted); }
+.addons b { color: var(--ink); }
+
+/* Visit steps */
+.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; counter-reset: step; }
+.steps li { counter-increment: step; display: grid; gap: 8px; align-content: start; padding-top: 16px; border-top: 3px solid var(--accent); }
+.steps li::before { content: "Step " counter(step); font-family: var(--font-mono); font-size: 12px; color: var(--accent); letter-spacing: .06em; text-transform: uppercase; }
+.steps h3 { font-size: 19px; }
+.steps p { color: var(--muted); font-size: 15px; }
+.steps .time { font-family: var(--font-mono); font-size: 13px; color: var(--ink); }
+@media (max-width: 860px) { .steps { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 520px) { .steps { grid-template-columns: 1fr; } }
+
+/* Booking */
+.book-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 32px; align-items: start; }
+form.book { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; display: grid; gap: 16px; min-width: 0; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 520px) { .row2 { grid-template-columns: 1fr; } }
+.field { display: grid; gap: 6px; min-width: 0; }
+.field label, .field .lbl { font-size: 13.5px; font-weight: 600; }
+.field input, .field select, .field textarea { width: 100%; font: 400 15px/1.4 var(--font-body); color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 11px 12px; }
+.field textarea { min-height: 76px; resize: vertical; }
+.slots { display: flex; flex-wrap: wrap; gap: 8px; }
+.slot { font: 500 13.5px/1 var(--font-mono); padding: 9px 11px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; font-variant-numeric: tabular-nums; }
+.slot[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.slot:disabled { opacity: .4; cursor: not-allowed; text-decoration: line-through; }
+.form-note { font-size: 13px; color: var(--muted); }
+.err { color: #c0392b; font-size: 13.5px; min-height: 1em; }
+.confirm { border: 1px solid var(--ok); background: color-mix(in srgb, var(--ok) 10%, var(--surface)); border-radius: 10px; padding: 14px 16px; font-size: 14.5px; display: grid; gap: 4px; }
+.confirm b { color: var(--ok); }
+
+aside.info { display: grid; gap: 22px; min-width: 0; }
+.hours { width: 100%; border-collapse: collapse; font-size: 15px; font-variant-numeric: tabular-nums; }
+.hours td { padding: 7px 0; border-bottom: 1px solid var(--line); }
+.hours td:last-child { text-align: right; font-family: var(--font-mono); font-size: 14px; }
+.hours tr.today td { color: var(--accent); font-weight: 600; }
+.contact { display: grid; gap: 8px; font-size: 15px; }
+.copyrow { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.copyrow code { font-family: var(--font-mono); font-size: 15px; user-select: all; }
+.copybtn { font: 500 12px/1 var(--font-body); padding: 6px 10px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--ink); cursor: pointer; }
+@media (max-width: 860px) { .book-grid { grid-template-columns: 1fr; } }
+
+/* FAQ */
+.faq { display: grid; gap: 0; border-top: 1px solid var(--line); max-width: 820px; }
+.faq details { border-bottom: 1px solid var(--line); padding-block: 16px; }
+.faq summary { cursor: pointer; font-weight: 600; font-size: 17px; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-family: var(--font-mono); color: var(--accent); font-size: 20px; line-height: 1; }
+.faq details[open] summary::after { content: "−"; }
+.faq details p { color: var(--muted); margin-top: 10px; max-width: 68ch; }
+
+footer { border-top: 1px solid var(--line); padding-block: 32px 40px; font-size: 13.5px; color: var(--muted); }
+footer .wrap { display: grid; gap: 10px; }
+
+/* Drip animation */
+.drop { animation: drip 2.4s ease-in infinite; }
+@keyframes drip { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 80% { transform: translateY(34px); opacity: 1; } 100% { transform: translateY(40px); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .drop { animation: none; } html { scroll-behavior: auto; } }
+html { scroll-behavior: smooth; }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Yuna's Clinic home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 16 16"><path d="M6 1h4v5h5v4h-5v5H6v-5H1V6h5z" fill="var(--accent-ink)"/></svg>
+      </span>
+      Yuna's Clinic
+    </a>
+    <nav class="links" aria-label="Main">
+      <a href="#flu">Flu shots</a>
+      <a href="#iv">IV therapy</a>
+      <a href="#visit">Your visit</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="btn btn-primary" href="#book">Book a visit</a>
+  </div>
+</header>
+
+<div class="season" role="status">
+  <div class="wrap">
+    <span><b>2026–27 FLU SEASON</b></span>
+    <span>Standard and high-dose vaccines in stock · walk-ins welcome Mon–Sat until 1 hour before close</span>
+  </div>
+</div>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-copy">
+        <span class="eyebrow">Nurse-led wellness clinic</span>
+        <h1>Flu shots in 10 minutes. <em>IV drips</em> in under an hour.</h1>
+        <p>Yuna's Clinic is a small, nurse-run practice for seasonal vaccines and IV hydration. Every visit starts with a screening by a registered nurse, and every drip is mixed after your vitals are checked.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#book">Book an appointment</a>
+          <a class="btn btn-ghost" href="#iv">See the IV menu</a>
+        </div>
+        <div class="hero-facts">
+          <span>Registered nurses on every shift</span>
+          <span>Most insurance accepted for flu shots</span>
+          <span>HSA / FSA cards welcome</span>
+        </div>
+      </div>
+      <div class="bag-stage" aria-hidden="true">
+        <svg viewBox="0 0 200 300">
+          <rect x="88" y="4" width="24" height="14" rx="4" fill="var(--line)"/>
+          <path d="M40 22 h120 a14 14 0 0 1 14 14 v138 c0 22 -30 38 -74 38 c-44 0 -74 -16 -74 -38 v-138 a14 14 0 0 1 14 -14z" fill="var(--surface)" stroke="var(--accent)" stroke-width="3"/>
+          <path d="M29 92 h142 v82 c0 20 -30 34 -71 34 c-41 0 -71 -14 -71 -34z" fill="var(--accent-soft)"/>
+          <g font-family="IBM Plex Mono, monospace" fill="var(--ink)">
+            <text x="52" y="52" font-size="11" letter-spacing="1">YUNA'S CLINIC</text>
+            <text x="52" y="72" font-size="16" font-weight="500">1000 mL</text>
+            <text x="52" y="122" font-size="10" fill="var(--muted)">LACTATED RINGER'S</text>
+            <text x="52" y="138" font-size="10" fill="var(--muted)">+ B-COMPLEX</text>
+            <text x="52" y="154" font-size="10" fill="var(--muted)">+ VIT C · ZINC</text>
+          </g>
+          <g stroke="var(--muted)" stroke-width="1.2">
+            <line x1="160" y1="96" x2="170" y2="96"/><line x1="164" y1="116" x2="170" y2="116"/>
+            <line x1="160" y1="136" x2="170" y2="136"/><line x1="164" y1="156" x2="170" y2="156"/>
+          </g>
+          <rect x="94" y="212" width="12" height="10" fill="var(--accent)"/>
+          <path d="M90 222 h20 v34 a10 10 0 0 1 -20 0z" fill="var(--surface)" stroke="var(--accent)" stroke-width="2.5"/>
+          <circle class="drop" cx="100" cy="230" r="3.5" fill="var(--accent)"/>
+          <path d="M100 266 v30" stroke="var(--accent)" stroke-width="3" fill="none"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="flu">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Seasonal vaccines</span>
+        <h2>Flu shots</h2>
+        <p>The CDC recommends a yearly flu vaccine for everyone 6 months and older. This season's vaccines are trivalent, covering two influenza A strains and one B strain. Protection builds over about two weeks, so October and November are the best months to get yours.</p>
+      </div>
+      <div class="flu-grid">
+        <article class="flu">
+          <span class="who">AGES 6 MONTHS – 64</span>
+          <h3>Standard-dose flu shot</h3>
+          <p>The everyday vaccine for children and adults. One injection in the upper arm, then a 15-minute observation.</p>
+          <div class="price"><span>Self-pay · $0 with most insurance</span><strong>$45</strong></div>
+        </article>
+        <article class="flu">
+          <span class="who">AGES 65 AND OVER</span>
+          <h3>High-dose flu shot</h3>
+          <p>A higher-antigen or adjuvanted vaccine, the type preferred for older adults because their immune response is weaker.</p>
+          <div class="price"><span>Self-pay · Medicare Part B covers</span><strong>$85</strong></div>
+        </article>
+        <article class="flu">
+          <span class="who">TEAMS OF 10 OR MORE</span>
+          <h3>Workplace flu clinic</h3>
+          <p>Our nurses come to your office with vaccines, consent forms and a sharps container. We bill insurance where we can.</p>
+          <div class="price"><span>Per person, on site</span><strong>from $40</strong></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="iv">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">IV hydration therapy</span>
+        <h2>IV menu</h2>
+        <p>Each drip is 500 mL or 1000 mL of IV fluid with added vitamins or minerals, given in a reclining chair. A nurse checks your blood pressure and history first and stays nearby for the whole infusion.</p>
+      </div>
+      <div class="filters" role="group" aria-label="Filter IV treatments">
+        <button class="chip" type="button" aria-pressed="true" data-filter="all">All drips</button>
+        <button class="chip" type="button" aria-pressed="false" data-filter="hydration">Hydration</button>
+        <button class="chip" type="button" aria-pressed="false" data-filter="immune">Immune support</button>
+        <button class="chip" type="button" aria-pressed="false" data-filter="energy">Energy & recovery</button>
+      </div>
+      <div class="iv-list" id="iv-list"></div>
+      <p class="addons"><b>Add-ons to any drip:</b> extra vitamin C (+$25), glutathione push (+$35), anti-nausea medication (+$30), B12 intramuscular shot (+$25, also available on its own).</p>
+    </div>
+  </section>
+
+  <section class="block" id="visit">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">What to expect</span>
+        <h2>Your visit</h2>
+        <p>A flu shot takes about 25 minutes door to door. An IV visit takes 45 to 75 minutes depending on the drip.</p>
+      </div>
+      <ol class="steps">
+        <li><h3>Check in</h3><p>Bring photo ID and your insurance card. Fill in a short health form on a tablet.</p><span class="time">~5 min</span></li>
+        <li><h3>Nurse screening</h3><p>We take your blood pressure, pulse and temperature and review medications and allergies.</p><span class="time">~5 min</span></li>
+        <li><h3>Treatment</h3><p>A quick injection, or an IV line placed in your arm while you relax with Wi-Fi and a blanket.</p><span class="time">1–60 min</span></li>
+        <li><h3>Observation</h3><p>Stay seated 15 minutes after a vaccine. After an IV we recheck vitals before you go.</p><span class="time">~15 min</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="block" id="book">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Appointments</span>
+        <h2>Book a visit</h2>
+        <p>Choose a treatment and a time. We'll confirm by text within one business hour.</p>
+      </div>
+      <div class="book-grid">
+        <form class="book" id="book-form" novalidate>
+          <div class="field">
+            <label for="svc">Treatment</label>
+            <select id="svc" name="svc"></select>
+          </div>
+          <div class="row2">
+            <div class="field">
+              <label for="date">Date</label>
+              <input id="date" name="date" type="date">
+            </div>
+            <div class="field">
+              <label for="guests">People in your group</label>
+              <select id="guests" name="guests">
+                <option>1</option><option>2</option><option>3</option><option>4</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <span class="lbl" id="slot-label">Available times</span>
+            <div class="slots" id="slots" role="group" aria-labelledby="slot-label"></div>
+          </div>
+          <div class="row2">
+            <div class="field">
+              <label for="name">Full name</label>
+              <input id="name" name="name" autocomplete="name">
+            </div>
+            <div class="field">
+              <label for="phone">Mobile number</label>
+              <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="(555) 010-2468">
+            </div>
+          </div>
+          <div class="field">
+            <label for="notes">Anything we should know? (optional)</label>
+            <textarea id="notes" name="notes" placeholder="Allergies, pregnancy, past fainting with needles…"></textarea>
+          </div>
+          <p class="err" id="err" role="alert"></p>
+          <button class="btn btn-primary" type="submit" id="submit">Request appointment</button>
+          <p class="form-note">This is a preview of the booking form. Requests are not sent yet; call the clinic to book for real.</p>
+          <div class="confirm" id="confirm" hidden></div>
+        </form>
+
+        <aside class="info">
+          <div>
+            <span class="eyebrow">Hours</span>
+            <table class="hours" id="hours">
+              <tbody>
+                <tr data-d="1"><td>Monday</td><td>9:00 – 18:00</td></tr>
+                <tr data-d="2"><td>Tuesday</td><td>9:00 – 18:00</td></tr>
+                <tr data-d="3"><td>Wednesday</td><td>9:00 – 20:00</td></tr>
+                <tr data-d="4"><td>Thursday</td><td>9:00 – 18:00</td></tr>
+                <tr data-d="5"><td>Friday</td><td>9:00 – 18:00</td></tr>
+                <tr data-d="6"><td>Saturday</td><td>10:00 – 15:00</td></tr>
+                <tr data-d="0"><td>Sunday</td><td>Closed</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="contact">
+            <span class="eyebrow">Contact</span>
+            <div class="copyrow"><code id="tel">(555) 010-2468</code><button class="copybtn" type="button" data-copy="tel">Copy</button></div>
+            <div class="copyrow"><code id="mail">hello@yunasclinic.example</code><button class="copybtn" type="button" data-copy="mail">Copy</button></div>
+            <p>2140 Linden Avenue, Suite 3<br>Free parking behind the building</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="faq">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Questions</span>
+        <h2>FAQ</h2>
+      </div>
+      <div class="faq">
+        <details><summary>Can I get a flu shot if I'm feeling sick?</summary><p>A mild cold without fever is fine. If you have a fever or moderate illness, wait until you feel better. Our nurse will check your temperature before the shot.</p></details>
+        <details><summary>Can I get a flu shot and a COVID-19 vaccine on the same day?</summary><p>Yes. The CDC says both can be given at the same visit, usually one in each arm. Ask us which COVID-19 vaccine we have in stock.</p></details>
+        <details><summary>Who should not get IV therapy?</summary><p>IV hydration isn't right for everyone. We may decline or ask for your doctor's approval if you have heart failure, kidney disease, uncontrolled high blood pressure, or are pregnant. The nurse screening covers this.</p></details>
+        <details><summary>Does insurance cover IV drips?</summary><p>No. IV wellness drips are self-pay. Many HSA and FSA plans accept them; we can give you an itemized receipt.</p></details>
+        <details><summary>What should I do before an IV?</summary><p>Eat a light meal and drink water beforehand so your veins are easier to find. Wear a top with sleeves that roll up above the elbow.</p></details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <strong style="color: var(--ink); font-family: var(--font-display); font-size: 16px;">Yuna's Clinic</strong>
+    <p>IV therapy is a wellness service and is not intended to diagnose, treat, cure or prevent any disease. Prices shown are self-pay rates and may change. If you have a medical emergency, call 911.</p>
+    <p>© 2026 Yuna's Clinic</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // IV treatment catalog
+  const DRIPS = [
+    { id: "hydrate", name: "Classic Hydration", cat: "hydration", tag: "Start here", pop: false,
+      desc: "Plain IV fluid with electrolytes for dehydration after travel, heat or a long week.",
+      fluid: "1000 mL LR", time: "35–45 min", contents: "Sodium, potassium, calcium", price: 129 },
+    { id: "myers", name: "Myers' Cocktail", cat: "energy", tag: "Most booked", pop: true,
+      desc: "The classic vitamin drip, used since the 1970s, for low energy and general wellness.",
+      fluid: "500 mL NS", time: "45–60 min", contents: "Mg, Ca, B-complex, B12, vit C", price: 189 },
+    { id: "immune", name: "Immune Boost", cat: "immune", tag: "Flu season", pop: true,
+      desc: "High vitamin C and zinc. Pairs well with your flu shot on the same visit.",
+      fluid: "1000 mL LR", time: "45–60 min", contents: "Vit C 5 g, zinc, B-complex", price: 199 },
+    { id: "recovery", name: "Recovery", cat: "energy", tag: "After illness", pop: false,
+      desc: "Fluids, anti-nausea medication and B vitamins for recovery after a stomach bug or hangover.",
+      fluid: "1000 mL LR", time: "40–50 min", contents: "B-complex, Mg, ondansetron", price: 179 },
+    { id: "glow", name: "Skin Glow", cat: "hydration", tag: "Hydration", pop: false,
+      desc: "Hydration with biotin and vitamin C, finished with a glutathione push.",
+      fluid: "500 mL NS", time: "40–50 min", contents: "Biotin, vit C, glutathione", price: 209 },
+    { id: "nad", name: "NAD+ Infusion", cat: "energy", tag: "Slow drip", pop: false,
+      desc: "A slower infusion of NAD+, a coenzyme involved in cellular energy. Plan for a longer visit.",
+      fluid: "500 mL NS", time: "90–120 min", contents: "NAD+ 250 mg", price: 349 }
+  ];
+  const FLU = [
+    { id: "flu-std", name: "Flu shot, standard dose", price: 45 },
+    { id: "flu-hd", name: "Flu shot, high dose (65+)", price: 85 },
+    { id: "b12", name: "B12 shot", price: 25 }
+  ];
+
+  const list = document.getElementById("iv-list");
+  const fmt = n => "$" + n;
+
+  function renderDrips(filter) {
+    list.innerHTML = "";
+    DRIPS.filter(d => filter === "all" || d.cat === filter).forEach(d => {
+      const row = document.createElement("article");
+      row.className = "iv";
+      row.innerHTML =
+        '<div class="iv-main"><h3>' + d.name + ' <span class="tag' + (d.pop ? " pop" : "") + '">' + d.tag + '</span></h3><p>' + d.desc + '</p></div>' +
+        '<dl class="label"><dt>Fluid</dt><dd>' + d.fluid + '</dd><dt>Time</dt><dd>' + d.time + '</dd><dt>With</dt><dd>' + d.contents + '</dd></dl>' +
+        '<div class="iv-price"><strong>' + fmt(d.price) + '</strong><button class="btn btn-ghost" type="button" data-book="' + d.id + '">Book this</button></div>';
+      list.appendChild(row);
+    });
+  }
+
+  document.querySelectorAll(".chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+      document.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", String(c === chip)));
+      renderDrips(chip.dataset.filter);
+    });
+  });
+  renderDrips("all");
+
+  // Booking form
+  const svc = document.getElementById("svc");
+  const groups = [["Vaccines & shots", FLU], ["IV therapy", DRIPS]];
+  groups.forEach(([label, items]) => {
+    const og = document.createElement("optgroup");
+    og.label = label;
+    items.forEach(i => {
+      const o = document.createElement("option");
+      o.value = i.id; o.textContent = i.name + " · " + fmt(i.price);
+      og.appendChild(o);
+    });
+    svc.appendChild(og);
+  });
+
+  list.addEventListener("click", e => {
+    const b = e.target.closest("[data-book]");
+    if (!b) return;
+    svc.value = b.dataset.book;
+    document.getElementById("book").scrollIntoView();
+    svc.focus({ preventScroll: true });
+  });
+
+  const HOURS = { 0: null, 1: [9, 18], 2: [9, 18], 3: [9, 20], 4: [9, 18], 5: [9, 18], 6: [10, 15] };
+  const dateEl = document.getElementById("date");
+  const slotsEl = document.getElementById("slots");
+  let chosen = null;
+
+  const pad = n => String(n).padStart(2, "0");
+  const iso = d => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+
+  // Default to the next open day
+  const start = new Date();
+  while (!HOURS[start.getDay()]) start.setDate(start.getDate() + 1);
+  dateEl.min = iso(new Date());
+  dateEl.value = iso(start);
+
+  // Deterministic pseudo-booked slots so the preview looks realistic
+  function isTaken(dateStr, h, m) {
+    let s = 0;
+    for (const ch of dateStr + h + m) s = (s * 31 + ch.charCodeAt(0)) % 997;
+    return s % 4 === 0;
+  }
+
+  function renderSlots() {
+    slotsEl.innerHTML = "";
+    chosen = null;
+    const v = dateEl.value;
+    if (!v) return;
+    const d = new Date(v + "T00:00");
+    const hrs = HOURS[d.getDay()];
+    if (!hrs) {
+      slotsEl.innerHTML = '<span class="form-note">Closed on Sundays. Pick another day.</span>';
+      return;
+    }
+    const now = new Date();
+    for (let h = hrs[0]; h < hrs[1] - 1; h++) {
+      for (const m of [0, 30]) {
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "slot";
+        b.textContent = pad(h) + ":" + pad(m);
+        b.setAttribute("aria-pressed", "false");
+        const when = new Date(v + "T" + pad(h) + ":" + pad(m));
+        if (when < now || isTaken(v, h, m)) b.disabled = true;
+        b.addEventListener("click", () => {
+          slotsEl.querySelectorAll(".slot").forEach(x => x.setAttribute("aria-pressed", "false"));
+          b.setAttribute("aria-pressed", "true");
+          chosen = b.textContent;
+        });
+        slotsEl.appendChild(b);
+      }
+    }
+  }
+  dateEl.addEventListener("change", renderSlots);
+  renderSlots();
+
+  // Highlight today's hours
+  const today = document.querySelector('#hours tr[data-d="' + new Date().getDay() + '"]');
+  if (today) today.classList.add("today");
+
+  const form = document.getElementById("book-form");
+  const err = document.getElementById("err");
+  const confirmBox = document.getElementById("confirm");
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.replace(/\D/g, "");
+    if (!chosen) { err.textContent = "Pick an available time slot."; return; }
+    if (!name) { err.textContent = "Enter your full name."; return; }
+    if (phone.length < 10) { err.textContent = "Enter a mobile number with at least 10 digits."; return; }
+    err.textContent = "";
+    const item = [...FLU, ...DRIPS].find(i => i.id === svc.value);
+    const d = new Date(dateEl.value + "T00:00");
+    const day = d.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
+    confirmBox.innerHTML = "<b>Request ready (preview only, not sent)</b><span></span>";
+    confirmBox.querySelector("span").textContent =
+      item.name + " for " + document.getElementById("guests").value + " on " + day + " at " + chosen + ", under " + name + ". To book, call (555) 010-2468.";
+    confirmBox.hidden = false;
+  });
+
+  // Copy buttons
+  document.querySelectorAll("[data-copy]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const el = document.getElementById(btn.dataset.copy);
+      const done = () => { btn.textContent = "Copied"; setTimeout(() => (btn.textContent = "Copy"), 1500); };
+      const fallback = () => { const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = "Selected"; };
+      try { navigator.clipboard.writeText(el.textContent).then(done, fallback); } catch (_) { fallback(); }
+    });
+  });
+})();
+</script>
